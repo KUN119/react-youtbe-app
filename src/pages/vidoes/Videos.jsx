@@ -9,22 +9,24 @@ export default function Videos() {
     const { youtube } = useYoutubeApi();
     const { isLoading, error, data: videos } = useQuery({
         queryKey: ['videos', keyword],
-        queryFn: () => youtube.search(keyword)
+        queryFn: () => youtube.search(keyword),
+        staleTime: 1000 * 6 * 1
     })
 
     return (
         <>
-            <div>Videos { keyword ? `🔍${keyword}` : '🔥🔥' }</div>
             {isLoading && <p>Loading...</p>}
             {error && <p>Sometgin is wrong.</p>}
-            {videos && <ul className='grid grid-cols-1 sm:gird-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-2 gap-y-4'>
-                {videos.map((video) => (
-                    <VideoCard 
-                        key={video.id}
-                        video={video}
-                    />
-                ))}
-                </ul>}
+            {videos && (
+                <ul className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-2 gap-y-4'>
+                    {videos.map((video) => (
+                        <VideoCard 
+                            key={video.id}
+                            video={video}
+                        />
+                    ))}
+                </ul>
+            )}
         </> 
     )
 }

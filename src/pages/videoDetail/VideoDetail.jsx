@@ -1,22 +1,40 @@
 import React from 'react'
-import { useParams } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
+import ChannelInfo from '../../components/channelInfo/ChannelInfo';
+import RelatedVideos from '../../components/relatedVideos/RelatedVideos';
 
 export default function VideoDetail() {
-    const { videoId } = useParams();
-
-    const iframeProps = {
-        id: "ytplayer",
-        type: "text/html",
-        width: "720",
-        height: "405",
-        src: `https://www.youtube.com/embed/${videoId}`,
-        frameborder: "0",
-        allowfullscreen: "allowfullscreen",
-      };
+    const { state: { video } } = useLocation();
+    const { title, channelId, channelTitle, description } = video.snippet;
 
     return (
-        <div>
-            <iframe {...iframeProps}></iframe>
-        </div>
+        <section className='flex flex-col lg:flex-row'>
+            <article className='basis-4/6'>
+                <iframe 
+                    id="player" 
+                    type="text/html" 
+                    height="640"
+                    width='100%'
+                    src={`http://www.youtube.com/embed/${video.id}`}
+                    frameBorder="0"
+                    title={title}
+                />
+                <div className='p-8'>
+                    <h2 className='text-xl font-bold'>{title}</h2>
+                    <ChannelInfo 
+                        id={channelId}
+                        name={channelTitle}
+                    />
+                    <p className='text-sm opacity-80 my-2'>{channelTitle}</p>
+                    <pre className='text-sm whitespace-pre-wrap'>{description}</pre>
+                </div>
+            </article>
+
+            <section className='basis-2/6'>
+                <RelatedVideos 
+                    channelId={channelId}
+                />
+            </section>
+        </section>
     )
 }
